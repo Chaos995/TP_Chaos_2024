@@ -1,9 +1,5 @@
 # TP_Chaos_2024
 
-This file contains a C project:
-
-The subject is: "Gestion de bibliothèque"
-
 The participants are:
 	-Marouane Jakni
 	-Ait Dra Nabil
@@ -11,6 +7,10 @@ The participants are:
 	-Hamzaoui Fatima
 	-Hakim Mohamed Akram
 	-El Airaj Houssam
+
+This file contains a C project:
+
+The subject is: "Gestion de bibliothèque"
 
 The file consist of three files:
 
