@@ -44,5 +44,5 @@ rechercher(); //allows all users to search for a certain book. (both)
 Trie(); //sort the books based on category or alphabetical order (alphabetical order is a work in progress), 
 it branch into two functions, by_order, and by_categorie. (both)
 
-		#wrote by Marouane.
+--wrote by Marouane
 
