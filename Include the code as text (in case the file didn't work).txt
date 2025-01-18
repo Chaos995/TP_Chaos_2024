@@ -2,7 +2,6 @@ man.c:
 
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 #include "bibliotheque.h"
 
 int main(){
@@ -25,7 +24,6 @@ bibliotheque.h:
 
 #ifndef BIBLIOTHEQUE_H
 #define BIBLIOTHEQUE_H
-
 #define MAX 100
 
 typedef struct{
@@ -39,16 +37,21 @@ typedef struct{
     int Disponibilite;
 }books;
 
-int user_choice();
-void admin();
-void user();
-int number();
-void filling_struct(books book[], int n);
-void file_creation(books book[], int n);
-void modify();
-void delete_book();
-void rechercher();
-void Trie();
+int user_choice();//Student 1:
+void admin();//Student 1:
+void user();//Student 1:
+
+int number();//Student 2:
+void filling_struct(books book[], int n);//Student 2:
+void file_creation(books book[], int n);//Student 2:
+
+void modify();//Student 3:
+
+void delete_book();//Student 4:
+
+void rechercher();//Student 5:
+
+void trie();//Student 6:
 
 #endif
 __________________________________________________________
@@ -57,18 +60,10 @@ bibliotheque.c:
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include "bibliotheque.h"
-
-void clear_input() //clears the user input from any left overs like '\n' after scanf
-{
-    int c;
-    while((c = getchar()) != '\n' && c != EOF);
-}
 
 int user_choice() //takes the user choice, whether he is an admin or a user
 {
-
     int choice;
     char password[10];
 
@@ -78,21 +73,21 @@ int user_choice() //takes the user choice, whether he is an admin or a user
     printf("Your Choice: ");
     scanf("%d", &choice);
 
-    if (choice == 1) {
+    if (choice == 1){
         return choice;
-    } else if (choice == 0) {
+    }else if (choice == 0){
         printf("Login: Admin\n");
         printf("Enter Password: ");
         scanf("%s", password);
 
-        if (strcmp(password, "admin0000") == 0) {
+        if(strcmp(password, "admin0000") == 0){
             return choice;
-        } else {
-            printf("Password is incorrect!\n");
+        }else{
+            printf("password is incorrect\n");
             return -1;
         }
-    } else {
-        printf("Invalid choice!\n");
+    }else{
+        printf("invalid choice\n");
         return -1;
     }
 }
@@ -131,7 +126,7 @@ void admin() //if the user is an adimn this function is called, it shows the pos
                 rechercher();
                 break;
             case 5:
-                Trie();
+                trie();
                 break;
             case 0:
                 exit(0);
@@ -158,7 +153,7 @@ void user() //if the user is NOT an admin this function is called, it shows the 
                 rechercher();
                 break;
             case 2:
-                Trie();
+                trie();
                 break;
             case 0:
                 exit(0);
@@ -178,67 +173,76 @@ int number() //takes the number of the books the admin wanna add, not accessible
     return n;
 }
 
-void filling_struct(books *book, int n) //this function fill up the struct with the info of the books, not accessible by the normal users
+void filling_struct(books book[], int n) //this function fill up the struct with the info of the books, not accessible by the normal users
 {
     int i;
 
     for(i=0; i<n; i++){
         printf("Saisir %d ID: ", i+1);
         scanf("%s", book[i].ID);
-        clear_input();
+        getchar();
         printf("Saisir Titre: ");
-        fgets(book[i].Titre, sizeof(book[i].Titre), stdin);
+        //fgets(book[i].Titre, sizeof(book[i].Titre), stdin);
+        scanf("%[^\n]", book[i].Titre);
+        getchar();
         printf("Saisir Auteur: ");
-        fgets(book[i].Auteur, sizeof(book[i].Auteur), stdin);
+        //fgets(book[i].Auteur, sizeof(book[i].Auteur), stdin);
+        scanf("%[^\n]", book[i].Auteur);
+        getchar();
         printf("Saisir Description: ");
-        fgets(book[i].Description, sizeof(book[i].Description), stdin);
+        //fgets(book[i].Description, sizeof(book[i].Description), stdin);
+        scanf("%[^\n]", book[i].Description);
+        getchar();
         printf("Saisir Nom_utilisateur: ");
-        fgets(book[i].Nom_utilisateur, sizeof(book[i].Nom_utilisateur), stdin);
+        //fgets(book[i].Nom_utilisateur, sizeof(book[i].Nom_utilisateur), stdin);
+        scanf("%[^\n]", book[i].Nom_utilisateur);
+        getchar();
         printf("Saisir Prix: ");
         scanf("%f", &book[i].Prix);
-        clear_input();
+        getchar();
         printf("Saisir Categorie: ");
-        fgets(book[i].Categorie, sizeof(book[i].Categorie), stdin);
+        //fgets(book[i].Categorie, sizeof(book[i].Categorie), stdin);
+        scanf("%[^\n]", book[i].Categorie);
+        getchar();
         printf("Saisir Disponibilite: (0:false, 1:true)");
         scanf("%d", &book[i].Disponibilite);
-        clear_input();
+        getchar();
     }
 }
 
-void file_creation(books *book, int n) //this function create the files and fills them with the necessary info, not accessible by the normal user
+void file_creation(books book[], int n) //this function create the files and fills them with the necessary info, not accessible by the normal user
 {
   int i;
 
-
   FILE *f = fopen("Books.txt", "w");
+
   for(i=0; i<n; i++){
-
-
     fprintf(f, "ID: %s\n", book[i].ID);
-    fprintf(f, "Titre: %s", book[i].Titre);
-    fprintf(f, "Auteur: %s", book[i].Auteur);
-    fprintf(f, "Description: %s", book[i].Description);
-    fprintf(f, "Nom_utilisateur: %s", book[i].Nom_utilisateur);
+    fprintf(f, "Titre: %s\n", book[i].Titre);
+    fprintf(f, "Auteur: %s\n", book[i].Auteur);
+    fprintf(f, "Description: %s\n", book[i].Description);
+    fprintf(f, "Nom_utilisateur: %s\n", book[i].Nom_utilisateur);
     fprintf(f, "Prix: %f\n", book[i].Prix);
-    fprintf(f, "Categorie: %s", book[i].Categorie);
+    fprintf(f, "Categorie: %s\n", book[i].Categorie);
     fprintf(f, "Disponibilite: %d\n", book[i].Disponibilite);
   }
-  fclose(f);
 
+  fclose(f);
 }
 
 void modify() //this function allow the admin to modify the books info, not accessible by normal users
 {
+    books book;
+    char id_m[30];
+
     FILE *f = fopen("Books.txt", "r");
     FILE *temp = fopen("temp.txt", "w");
 
-    char ID_M[30];
     printf("Enter the ID of the book you wanna modify: ");
-    scanf("%s", ID_M);
-    clear_input();
+    scanf("%s", id_m);
+    getchar();
 
-    books book;
-    while (fscanf(f, "ID: %s\n", book.ID) == 1) {
+    while (fscanf(f, "ID: %s\n", book.ID) == 1){
         fscanf(f, "Titre: %[^\n]\n", book.Titre);
         fscanf(f, "Auteur: %[^\n]\n", book.Auteur);
         fscanf(f, "Description: %[^\n]\n", book.Description);
@@ -247,36 +251,46 @@ void modify() //this function allow the admin to modify the books info, not acce
         fscanf(f, "Categorie: %[^\n]\n", book.Categorie);
         fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);
 
-        if (strcmp(book.ID, ID_M) == 0) {
+        if (strcmp(book.ID, id_m) == 0){
 
             char choice[30];
-            printf("What do you wanna change? ");
+            printf("What do you wanna change?: ");
             scanf("%s", choice);
-            clear_input();
+            getchar();
 
-            if (strcmp(choice, "Titre") == 0) {
+            if (strcmp(choice, "Titre") == 0){
                 printf("Enter new Titre: ");
-                fgets(book.Titre, sizeof(book.Titre), stdin);
-            } else if (strcmp(choice, "Auteur") == 0) {
+                //fgets(book.Titre, sizeof(book.Titre), stdin);
+                scanf("%[^\n]", book.Titre);
+                getchar();
+            }else if (strcmp(choice, "Auteur") == 0) {
                 printf("Enter new Auteur: ");
-                fgets(book.Auteur, sizeof(book.Auteur), stdin);
-            } else if (strcmp(choice, "Description") == 0) {
+                //fgets(book.Auteur, sizeof(book.Auteur), stdin);
+                scanf("%[^\n]", book.Auteur);
+                getchar();
+            }else if (strcmp(choice, "Description") == 0) {
                 printf("Enter new Description: ");
-                fgets(book.Description, sizeof(book.Description), stdin);
-            } else if (strcmp(choice, "Nom_utilisateur") == 0) {
+                //fgets(book.Description, sizeof(book.Description), stdin);
+                scanf("%[^\n]", book.Description);
+                getchar();
+            }else if (strcmp(choice, "Nom_utilisateur") == 0){
                 printf("Enter new Nom_utilisateur: ");
-                fgets(book.Nom_utilisateur, sizeof(book.Nom_utilisateur), stdin);
-            } else if (strcmp(choice, "Prix") == 0) {
+                //fgets(book.Nom_utilisateur, sizeof(book.Nom_utilisateur), stdin);
+                scanf("%[^\n]", book.Nom_utilisateur);
+                getchar();
+            }else if (strcmp(choice, "Prix") == 0){
                 printf("Enter new Prix: ");
                 scanf("%f", &book.Prix);
-                clear_input();
-            } else if (strcmp(choice, "Categorie") == 0) {
+                getchar();
+            }else if (strcmp(choice, "Categorie") == 0){
                 printf("Enter new Categorie: ");
-                fgets(book.Categorie, sizeof(book.Categorie), stdin);
-            } else if (strcmp(choice, "Disponibilite") == 0) {
+                //fgets(book.Categorie, sizeof(book.Categorie), stdin);
+                scanf("%[^\n]", book.Categorie);
+                getchar();
+            }else if (strcmp(choice, "Disponibilite") == 0){
                 printf("Enter new Disponibilite (0 or 1): ");
                 scanf("%d", &book.Disponibilite);
-                clear_input();
+                getchar();
             }
         }
 
@@ -302,10 +316,10 @@ void delete_book() //allow admins to remove/delete a book choosen
     FILE *f = fopen("Books.txt", "r");
     FILE *temp = fopen("temp.txt", "w");
 
-    char ID_M[30];
+    char id_m[30];
     printf("Enter the ID of the book you wanna delete: ");
-    scanf("%s", ID_M);
-    clear_input();
+    scanf("%s", id_m);
+    getchar();
     books book;
 
     while (fscanf(f, "ID: %s\n", book.ID) == 1){
@@ -318,7 +332,7 @@ void delete_book() //allow admins to remove/delete a book choosen
         fscanf(f, "Categorie: %[^\n]\n", book.Categorie);
         fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);
 
-        if (strcmp(book.ID, ID_M) != 0) {
+        if (strcmp(book.ID, id_m) != 0){
 
             fprintf(temp, "ID: %s\n", book.ID);
             fprintf(temp, "Titre: %s\n", book.Titre);
@@ -350,7 +364,7 @@ void rechercher() //allow to search for a certain book, accessible by admins and
   FILE *f = fopen("Books.txt", "r");
 
   books book;
-  while (fscanf(f, "ID: %s\n", book.ID) == 1) {
+  while (fscanf(f, "ID: %s\n", book.ID) == 1){
     fscanf(f, "Titre: %[^\n]\n", book.Titre);
     fscanf(f, "Auteur: %[^\n]\n", book.Auteur);
     fscanf(f, "Description: %[^\n]\n", book.Description);
@@ -369,23 +383,23 @@ void rechercher() //allow to search for a certain book, accessible by admins and
             printf("Categorie: %s\n", book.Categorie);
             printf("Disponibilite: %d\n", book.Disponibilite);
     }
-
   }
+
   fclose(f);
 }
 
 void by_categorie() //sorts the books by categorie, can only be accessed by the Trie function
 {
-    char choice[30];
     books book;
+    char choice[30];
 
     printf("Enter the categorie: ");
     scanf("%s", choice);
-    clear_input();
+    getchar();
 
     FILE *f = fopen("Books.txt", "r");
 
-    while (fscanf(f, "ID: %s\n", book.ID) == 1) {
+    while (fscanf(f, "ID: %s\n", book.ID) == 1){
         fscanf(f, "Titre: %[^\n]\n", book.Titre);
         fscanf(f, "Auteur: %[^\n]\n", book.Auteur);
         fscanf(f, "Description: %[^\n]\n", book.Description);
@@ -427,7 +441,7 @@ void by_categorie() //sorts the books by categorie, can only be accessed by the 
     }
 }*/
 
-void Trie() //give the users and admins the choice to sort by either categorie or alphabetically
+void trie() //give the users and admins the choice to sort by either categorie or alphabetically
 {
     char order[30];
 
