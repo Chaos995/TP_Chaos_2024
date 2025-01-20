@@ -23,7 +23,7 @@ also contain the structures used in this project.
 
 bibliotheque.c:
 Where all the functions are defined.
-it has the main used functions, and follower functions like "clear_input()" which is not a main function.
+it has the main used functions and follower functions.
 
 The main functions are:
 user_choice; //it is used to take users choice, are they admin (require password "admin0000") or normal users, 
@@ -33,16 +33,16 @@ number(); //takes the number of books users wanna add, works with filling struct
 
 filling_struct(); //takes the book's info and stores it in an array of structs. (admin)
 
-file_creation(); //create a .txt file based on the info from the previous array of struct. (admin)
+file_creation(); //create a .csv file based on the info from the previous array of struct. (admin)
 
-modify(); //allow only admins to modify certain info in the .txt file, where books info is. (admin)
+modify(); //allow only admins to modify certain info in the .csv file, where books info is. (admin)
 
-delete_book(); //also only allows the admins to delete a certain book from the .txt file. (admin)
+delete_book(); //also only allows the admins to delete a certain book from the .csv file. (admin)
 
 rechercher(); //allows all users to search for a certain book. (both)
 
 Trie(); //sort the books based on category or price, 
-it branches into two functions, by_order, and by_categorie. (both)
+it branches into multiple other functions. (both)
 
 --written by Marouane
 
