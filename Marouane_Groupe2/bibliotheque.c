@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "bibliotheque.h"
 
+//the form of fprintf and fscanf didn't work in the .csv file
+
 int user_choice() //takes the user choice, whether he is an admin or a user
 {
     int choice;
@@ -32,6 +34,8 @@ int user_choice() //takes the user choice, whether he is an admin or a user
         return -1;
     }
 }
+
+
 
 void admin() //if the user is an adimn this function is called, it shows the possible function to call by an admin
 {
@@ -67,7 +71,7 @@ void admin() //if the user is an adimn this function is called, it shows the pos
                 rechercher();
                 break;
             case 5:
-                trie();
+                trie_admin();
                 break;
             case 0:
                 exit(0);
@@ -94,7 +98,7 @@ void user() //if the user is NOT an admin this function is called, it shows the 
                 rechercher();
                 break;
             case 2:
-                trie();
+                trie_user();
                 break;
             case 0:
                 exit(0);
@@ -113,6 +117,7 @@ int number() //takes the number of the books the admin wanna add, not accessible
 
     return n;
 }
+
 
 void filling_struct(books book[], int n) //this function fill up the struct with the info of the books, not accessible by the normal users
 {
@@ -155,17 +160,27 @@ void file_creation(books book[], int n) //this function create the files and fil
 {
   int i;
 
-  FILE *f = fopen("Books.txt", "w");
+  FILE *f = fopen("Books.csv", "w");
 
   for(i=0; i<n; i++){
-    fprintf(f, "ID: %s\n", book[i].ID);
-    fprintf(f, "Titre: %s\n", book[i].Titre);
-    fprintf(f, "Auteur: %s\n", book[i].Auteur);
-    fprintf(f, "Description: %s\n", book[i].Description);
-    fprintf(f, "Nom_utilisateur: %s\n", book[i].Nom_utilisateur);
-    fprintf(f, "Prix: %f\n", book[i].Prix);
-    fprintf(f, "Categorie: %s\n", book[i].Categorie);
-    fprintf(f, "Disponibilite: %d\n", book[i].Disponibilite);
+    /*fprintf(f, "ID: %s,", book[i].ID);
+    fprintf(f, "Titre: %s,", book[i].Titre);
+    fprintf(f, "Auteur: %s,", book[i].Auteur);
+    fprintf(f, "Description: %s,", book[i].Description);
+    fprintf(f, "Nom_utilisateur: %s,", book[i].Nom_utilisateur);
+    fprintf(f, "Prix: %f,", book[i].Prix);
+    fprintf(f, "Categorie: %s,", book[i].Categorie);
+    fprintf(f, "Disponibilite: %d\n", book[i].Disponibilite);*/
+
+    fprintf(f, "ID: %s,Titre: %s,Auteur: %s,Description: %s,Nom_utilisateur: %s,Prix: %.2f,Categorie: %s,Disponibilite: %d\n",
+                book[i].ID,
+                book[i].Titre,
+                book[i].Auteur,
+                book[i].Description,
+                book[i].Nom_utilisateur,
+                book[i].Prix,
+                book[i].Categorie,
+                book[i].Disponibilite);
   }
 
   fclose(f);
@@ -176,21 +191,31 @@ void modify() //this function allow the admin to modify the books info, not acce
     books book;
     char id_m[30];
 
-    FILE *f = fopen("Books.txt", "r");
-    FILE *temp = fopen("temp.txt", "w");
+    FILE *f = fopen("Books.csv", "r");
+    FILE *temp = fopen("temp.csv", "w");
 
     printf("Enter the ID of the book you wanna modify: ");
     scanf("%s", id_m);
     getchar();
 
-    while (fscanf(f, "ID: %s\n", book.ID) == 1){
-        fscanf(f, "Titre: %[^\n]\n", book.Titre);
-        fscanf(f, "Auteur: %[^\n]\n", book.Auteur);
-        fscanf(f, "Description: %[^\n]\n", book.Description);
-        fscanf(f, "Nom_utilisateur: %[^\n]\n", book.Nom_utilisateur);
-        fscanf(f, "Prix: %f\n", &book.Prix);
-        fscanf(f, "Categorie: %[^\n]\n", book.Categorie);
-        fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);
+    /*while (fscanf(f, "ID: %[^,],", book.ID) == 1){
+        fscanf(f, "Titre: %[^,],", book.Titre);
+        fscanf(f, "Auteur: %[^,],", book.Auteur);
+        fscanf(f, "Description: %[^,],", book.Description);
+        fscanf(f, "Nom_utilisateur: %[^,],", book.Nom_utilisateur);
+        fscanf(f, "Prix: %f,", &book.Prix);
+        fscanf(f, "Categorie: %[^,],", book.Categorie);
+        fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);*/
+
+    while(fscanf(f, "ID: %[^,],Titre: %[^,],Auteur: %[^,],Description: %[^,],Nom_utilisateur: %[^,],Prix: %f,Categorie: %[^,],Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                &book.Prix,
+                book.Categorie,
+                &book.Disponibilite) == 8){
 
         if (strcmp(book.ID, id_m) == 0){
 
@@ -235,27 +260,28 @@ void modify() //this function allow the admin to modify the books info, not acce
             }
         }
 
-        fprintf(temp, "ID: %s\n", book.ID);
-        fprintf(temp, "Titre: %s\n", book.Titre);
-        fprintf(temp, "Auteur: %s\n", book.Auteur);
-        fprintf(temp, "Description: %s\n", book.Description);
-        fprintf(temp, "Nom_utilisateur: %s\n", book.Nom_utilisateur);
-        fprintf(temp, "Prix: %.2f\n", book.Prix);
-        fprintf(temp, "Categorie: %s\n", book.Categorie);
-        fprintf(temp, "Disponibilite: %d\n", book.Disponibilite);
+        fprintf(temp, "ID: %s,Titre: %s,Auteur: %s,Description: %s,Nom_utilisateur: %s,Prix: %.2f,Categorie: %s,Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                book.Prix,
+                book.Categorie,
+                book.Disponibilite);
     }
 
     fclose(f);
     fclose(temp);
 
-    remove("Books.txt");
-    rename("temp.txt", "Books.txt");
+    remove("Books.csv");
+    rename("temp.csv", "Books.csv");
 }
 
 void delete_book() //allow admins to remove/delete a book choosen
 {
-    FILE *f = fopen("Books.txt", "r");
-    FILE *temp = fopen("temp.txt", "w");
+    FILE *f = fopen("Books.csv", "r");
+    FILE *temp = fopen("temp.csv", "w");
 
     char id_m[30];
     printf("Enter the ID of the book you wanna delete: ");
@@ -263,25 +289,35 @@ void delete_book() //allow admins to remove/delete a book choosen
     getchar();
     books book;
 
-    while (fscanf(f, "ID: %s\n", book.ID) == 1){
+    /*while (fscanf(f, "ID: %s,", book.ID) == 1){
 
-        fscanf(f, "Titre: %[^\n]\n", book.Titre);
-        fscanf(f, "Auteur: %[^\n]\n", book.Auteur);
-        fscanf(f, "Description: %[^\n]\n", book.Description);
-        fscanf(f, "Nom_utilisateur: %[^\n]\n", book.Nom_utilisateur);
-        fscanf(f, "Prix: %f\n", &book.Prix);
-        fscanf(f, "Categorie: %[^\n]\n", book.Categorie);
-        fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);
+        fscanf(f, "Titre: %[^,],", book.Titre);
+        fscanf(f, "Auteur: %[^,],", book.Auteur);
+        fscanf(f, "Description: %[^,],", book.Description);
+        fscanf(f, "Nom_utilisateur: %[^,],", book.Nom_utilisateur);
+        fscanf(f, "Prix: %f,", &book.Prix);
+        fscanf(f, "Categorie: %[^,],", book.Categorie);
+        fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);*/
+
+    while (fscanf(f, "ID: %[^,],Titre: %[^,],Auteur: %[^,],Description: %[^,],Nom_utilisateur: %[^,],Prix: %f,Categorie: %[^,],Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                &book.Prix,
+                book.Categorie,
+                &book.Disponibilite) == 8){
 
         if (strcmp(book.ID, id_m) != 0){
 
-            fprintf(temp, "ID: %s\n", book.ID);
-            fprintf(temp, "Titre: %s\n", book.Titre);
-            fprintf(temp, "Auteur: %s\n", book.Auteur);
-            fprintf(temp, "Description: %s\n", book.Description);
-            fprintf(temp, "Nom_utilisateur: %s\n", book.Nom_utilisateur);
-            fprintf(temp, "Prix: %.2f\n", book.Prix);
-            fprintf(temp, "Categorie: %s\n", book.Categorie);
+            fprintf(temp, "ID: %s,", book.ID);
+            fprintf(temp, "Titre: %s,", book.Titre);
+            fprintf(temp, "Auteur: %s,", book.Auteur);
+            fprintf(temp, "Description: %s,", book.Description);
+            fprintf(temp, "Nom_utilisateur: %s,", book.Nom_utilisateur);
+            fprintf(temp, "Prix: %f,", book.Prix);
+            fprintf(temp, "Categorie: %s,", book.Categorie);
             fprintf(temp, "Disponibilite: %d\n", book.Disponibilite);
         }
     }
@@ -289,32 +325,43 @@ void delete_book() //allow admins to remove/delete a book choosen
     fclose(f);
     fclose(temp);
 
-    remove("Books.txt");
-    rename("temp.txt", "Books.txt");
+    remove("Books.csv");
+    rename("temp.csv", "Books.csv");
 }
 
 void rechercher() //allow to search for a certain book, accessible by admins and normal users
 {
-  char Auteur_n[30];
-  char Titre_n[30];
+    char Auteur_n[30];
+    char Titre_n[30];
 
-  printf("Enter the Auteur and Titre: ");
-  scanf("%s %s", Auteur_n, Titre_n);
-  getchar();
+    printf("Enter the Auteur and Titre of the book you want: ");
+    scanf("%s %s", Auteur_n, Titre_n);
+    getchar();
 
-  FILE *f = fopen("Books.txt", "r");
+    FILE *f = fopen("Books.csv", "r");
+    FILE *g = fopen("Bookrecherche.csv", "a");
 
-  books book;
-  while (fscanf(f, "ID: %s\n", book.ID) == 1){
-    fscanf(f, "Titre: %[^\n]\n", book.Titre);
-    fscanf(f, "Auteur: %[^\n]\n", book.Auteur);
-    fscanf(f, "Description: %[^\n]\n", book.Description);
-    fscanf(f, "Nom_utilisateur: %[^\n]\n", book.Nom_utilisateur);
-    fscanf(f, "Prix: %f\n", &book.Prix);
-    fscanf(f, "Categorie: %[^\n]\n", book.Categorie);
-    fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);
+    books book;
+  /*while (fscanf(f, "ID: %s,", book.ID) == 1){
+    fscanf(f, "Titre: %[^,],", book.Titre);
+    fscanf(f, "Auteur: %[^,],", book.Auteur);
+    fscanf(f, "Description: %[^,],", book.Description);
+    fscanf(f, "Nom_utilisateur: %[^,],", book.Nom_utilisateur);
+    fscanf(f, "Prix: %f,", &book.Prix);
+    fscanf(f, "Categorie: %[^,],", book.Categorie);
+    fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);*/
 
-    if(strcmp(book.Titre, Titre_n) == 0 && strcmp(book.Auteur, Auteur_n) == 0){
+    while(fscanf(f, "ID: %[^,],Titre: %[^,],Auteur: %[^,],Description: %[^,],Nom_utilisateur: %[^,],Prix: %f,Categorie: %[^,],Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                &book.Prix,
+                book.Categorie,
+                &book.Disponibilite) == 8){
+
+        if(strcmp(book.Titre, Titre_n) == 0 && strcmp(book.Auteur, Auteur_n) == 0){
             printf("ID: %s\n", book.ID);
             printf("Titre: %s\n", book.Titre);
             printf("Auteur: %s\n", book.Auteur);
@@ -323,14 +370,29 @@ void rechercher() //allow to search for a certain book, accessible by admins and
             printf("Prix: %.2f\n", book.Prix);
             printf("Categorie: %s\n", book.Categorie);
             printf("Disponibilite: %d\n", book.Disponibilite);
+
+            fprintf(g, "ID: %s,Titre: %s,Auteur: %s,Description: %s,Nom_utilisateur: %s,Prix: %.2f,Categorie: %s,Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                book.Prix,
+                book.Categorie,
+                book.Disponibilite);
+
     }
   }
+  fclose(g);
 
   fclose(f);
 }
 
-void by_categorie() //sorts the books by categorie, can only be accessed by the Trie function
+
+
+void by_categorie_ADMIN() //sorts the books by categorie, can only be accessed by the Trie function
 {
+    // books admin is tried by categorie
     books book;
     char choice[30];
 
@@ -338,16 +400,18 @@ void by_categorie() //sorts the books by categorie, can only be accessed by the 
     scanf("%s", choice);
     getchar();
 
-    FILE *f = fopen("Books.txt", "r");
+    FILE *f = fopen("Books.csv", "r");
+    FILE *g = fopen("temp.csv", "a");
 
-    while (fscanf(f, "ID: %s\n", book.ID) == 1){
-        fscanf(f, "Titre: %[^\n]\n", book.Titre);
-        fscanf(f, "Auteur: %[^\n]\n", book.Auteur);
-        fscanf(f, "Description: %[^\n]\n", book.Description);
-        fscanf(f, "Nom_utilisateur: %[^\n]\n", book.Nom_utilisateur);
-        fscanf(f, "Prix: %f\n", &book.Prix);
-        fscanf(f, "Categorie: %[^\n]\n", book.Categorie);
-        fscanf(f, "Disponibilite: %d\n", &book.Disponibilite);
+    while(fscanf(f, "ID: %[^,],Titre: %[^,],Auteur: %[^,],Description: %[^,],Nom_utilisateur: %[^,],Prix: %f,Categorie: %[^,],Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                &book.Prix,
+                book.Categorie,
+                &book.Disponibilite) == 8){
 
         if(strcmp(book.Categorie, choice) == 0){
                 printf("Titre: %s\n", book.Titre);
@@ -357,42 +421,266 @@ void by_categorie() //sorts the books by categorie, can only be accessed by the 
                 printf("Prix: %.2f\n", book.Prix);
                 printf("Categorie: %s\n", book.Categorie);
                 printf("Disponibilite: %d\n", book.Disponibilite);
+
+                fprintf(g, "ID: %s,Titre: %s,Auteur: %s,Description: %s,Nom_utilisateur: %s,Prix: %.2f,Categorie: %s,Disponibilite: %d\n",
+                    book.ID,
+                    book.Titre,
+                    book.Auteur,
+                    book.Description,
+                    book.Nom_utilisateur,
+                    book.Prix,
+                    book.Categorie,
+                    book.Disponibilite);
         }
     }
+    fclose(g);
+    fclose(f);
+
+    remove("Books.csv");
+    rename("temp.csv" , "Books.csv");
 }
 
-//work in progress...
-/*void by_alpha() //sorts the books names alpha. , can only be accessed by the Trie function
+
+
+void by_categorie_USER(){
+
+    // books user {bookrecherche} is tried by categorie
+
+    books book;
+    char choice[30];
+
+    printf("Enter the categorie: ");
+    scanf("%s", choice);
+    getchar();
+
+    FILE *f = fopen("Bookrecherche.csv", "r");
+    FILE *g = fopen("temp.csv", "a");
+
+    while(fscanf(f, "ID: %[^,],Titre: %[^,],Auteur: %[^,],Description: %[^,],Nom_utilisateur: %[^,],Prix: %f,Categorie: %[^,],Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                &book.Prix,
+                book.Categorie,
+                &book.Disponibilite) == 8){
+
+        if(strcmp(book.Categorie, choice) == 0){
+                printf("Titre: %s\n", book.Titre);
+                printf("Auteur: %s\n", book.Auteur);
+                printf("Description: %s\n", book.Description);
+                printf("Nom_utilisateur: %s\n", book.Nom_utilisateur);
+                printf("Prix: %.2f\n", book.Prix);
+                printf("Categorie: %s\n", book.Categorie);
+                printf("Disponibilite: %d\n", book.Disponibilite);
+
+                fprintf(g, "ID: %s,Titre: %s,Auteur: %s,Description: %s,Nom_utilisateur: %s,Prix: %.2f,Categorie: %s,Disponibilite: %d\n",
+                    book.ID,
+                    book.Titre,
+                    book.Auteur,
+                    book.Description,
+                    book.Nom_utilisateur,
+                    book.Prix,
+                    book.Categorie,
+                    book.Disponibilite);
+        }
+    }
+    fclose(g);
+    fclose(f);
+
+    remove("Bookrecherche.csv");
+    rename("temp.csv" , "Bookrecherche.csv");
+}
+
+
+
+void by_price_USER(int n) //sorts the books names alpha. , can only be accessed by the Trie function
 {
-    books book[MAX];
+
+    // books user {bookrecherche} is tried by price
+
+    books book;
+    float temp[n];
+    float t;
     int i = 0;
 
-    FILE *f = fopen("Books.txt", "r");
+    FILE *g = fopen("Bookrecherche.csv", "r");
+    FILE *g1 = fopen("temp.csv", "a");
 
-    while (fscanf(f, "ID: %s\n", book[i].ID) == 1) {
-        fscanf(f, "Titre: %[^\n]\n", book[i].Titre);
-        fscanf(f, "Auteur: %[^\n]\n", book[i].Auteur);
-        fscanf(f, "Description: %[^\n]\n", book[i].Description);
-        fscanf(f, "Nom_utilisateur: %[^\n]\n", book[i].Nom_utilisateur);
-        fscanf(f, "Prix: %f\n", &book[i].Prix);
-        fscanf(f, "Categorie: %[^\n]\n", book[i].Categorie);
-        fscanf(f, "Disponibilite: %d\n", &book[i].Disponibilite);
+    while(fscanf(g , "Prix: %f," , &temp[i] ) == 1 ){
+        i++;
+        continue;
+    }
 
+    for (i = 0 ; i<n ; i++){
+        if (temp[i] > temp[i+1]){
+            t = temp[i];
+            temp[i] = temp[i+1];
+            temp[i+1] = t;
+        }
+    }
+    i = 0;
+
+    while(fscanf(g, "ID: %[^,],Titre: %[^,],Auteur: %[^,],Description: %[^,],Nom_utilisateur: %[^,],Prix: %f,Categorie: %[^,],Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                &book.Prix,
+                book.Categorie,
+                &book.Disponibilite) == 8){
+
+        while (i != n+1){
+            if (book.Prix == temp[i]){
+                printf("ID: %s\n", book.ID);
+                printf("Titre: %s\n", book.Titre);
+                printf("Auteur: %s\n", book.Auteur);
+                printf("Description: %s\n", book.Description);
+                printf("Nom_utilisateur: %s\n", book.Nom_utilisateur);
+                printf("Prix: %.2f\n", book.Prix);
+                printf("Categorie: %s\n", book.Categorie);
+                printf("Disponibilite: %d\n", book.Disponibilite);
+                fseek(g , 0 , SEEK_SET);
+                i++;
+
+                fprintf(g1, "ID: %s,Titre: %s,Auteur: %s,Description: %s,Nom_utilisateur: %s,Prix: %.2f,Categorie: %s,Disponibilite: %d\n",
+                    book.ID,
+                    book.Titre,
+                    book.Auteur,
+                    book.Description,
+                    book.Nom_utilisateur,
+                    book.Prix,
+                    book.Categorie,
+                    book.Disponibilite);
+
+
+                break;
+            }
+        }
+    }
+    fclose(g1);
+    fclose(g);
+
+    remove("Bookrecherche.csv");
+    rename("temp.csv" , "Bookrecherche.csv");
+}
+
+
+
+void by_price_ADMIN(int n){
+
+    // books admin is tried by price
+
+    books book;
+    float temp[n];
+    float t;
+    int i = 0;
+
+    FILE *g = fopen("Books.csv", "r");
+    FILE *g1 = fopen("temp.csv", "a");
+
+    while(fscanf(g, "Prix: %f," , &temp[i] ) == 1 ){
         i++;
     }
-}*/
 
-void trie() //give the users and admins the choice to sort by either categorie or alphabetically
+    for (i = 0 ; i<n ; i++){
+        if (temp[i] > temp[i+1]){
+            t = temp[i];
+            temp[i] = temp[i+1];
+            temp[i+1] = t;
+        }
+    }
+    i = 0;
+
+    while(fscanf(g , "ID: %[^,],Titre: %[^,],Auteur: %[^,],Description: %[^,],Nom_utilisateur: %[^,],Prix: %f,Categorie: %[^,],Disponibilite: %d\n",
+                book.ID,
+                book.Titre,
+                book.Auteur,
+                book.Description,
+                book.Nom_utilisateur,
+                &book.Prix,
+                book.Categorie,
+                &book.Disponibilite) == 8){
+
+        while (i != n+1){
+            if (book.Prix == temp[i]){
+                printf("ID: %s\n", book.ID);
+                printf("Titre: %s\n", book.Titre);
+                printf("Auteur: %s\n", book.Auteur);
+                printf("Description: %s\n", book.Description);
+                printf("Nom_utilisateur: %s\n", book.Nom_utilisateur);
+                printf("Prix: %.2f\n", book.Prix);
+                printf("Categorie: %s\n", book.Categorie);
+                printf("Disponibilite: %d\n", book.Disponibilite);
+                fseek(g , 0 , SEEK_SET);
+                i++;
+
+                fprintf(g1, "ID: %s,Titre: %s,Auteur: %s,Description: %s,Nom_utilisateur: %s,Prix: %.2f,Categorie: %s,Disponibilite: %d\n",
+                    book.ID,
+                    book.Titre,
+                    book.Auteur,
+                    book.Description,
+                    book.Nom_utilisateur,
+                    book.Prix,
+                    book.Categorie,
+                    book.Disponibilite);
+
+                break;
+            }
+        }
+    }
+    fclose(g1);
+    fclose(g);
+
+    remove("Books.csv");
+    rename("temp.csv" , "Books.csv");
+}
+
+int number1() //takes the number of the books (used in function trie)
+{
+    int n;
+
+    printf("enter the number of books : ");
+    scanf("%d", &n);
+    getchar();
+
+    return n;
+}
+
+void trie_user() //give the users and admins the choice to sort by either categorie or alphabetically
 {
     char order[30];
+    int n;
+
+    n = number1();
 
     printf("Wanna sort by Categorie: ");
     scanf("%s", order);
 
     if(strcmp(order, "categorie") == 0){
-        by_categorie(); //call the by_categorie function if the user/admin choose to sort by categorie
+        by_categorie_USER();
+    }
+    else if(strcmp(order, "price") == 0){
+        by_price_USER(n);
+    }
+}
 
-    }/*else if(strcmp(order, "alpha") == 0){
-        by_alpha(); //work in progress...
-    }*/
+void trie_admin() //give the users and admins the choice to sort by either categorie or alphabetically
+{
+    char order[30];
+    int n;
+
+    n = number1();
+
+    printf("Wanna sort by Categorie or price: ");
+    scanf("%s", order);
+
+    if(strcmp(order, "categorie") == 0){
+        by_categorie_ADMIN();
+    }
+    else if(strcmp(order, "price") == 0){
+        by_price_ADMIN(n);
+    }
 }

@@ -47,3 +47,16 @@
 	<stdlib.h>
 	"bibliotheque.h"
 
+1737405876 source:c:\users\silence\documents\school\codes\tpcproject\marouane_groupe2\bibliotheque.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"bibliotheque.h"
+
+1737405805 c:\users\silence\documents\school\codes\tpcproject\marouane_groupe2\bibliotheque.h
+
+1737226359 source:c:\users\silence\documents\school\codes\tpcproject\marouane_groupe2\main.c
+	<stdio.h>
+	<string.h>
+	"bibliotheque.h"
+

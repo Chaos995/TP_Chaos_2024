@@ -27,6 +27,7 @@ void delete_book();//Student 4:
 
 void rechercher();//Student 5:
 
-void trie();//Student 6:
+void trie_admin();//Student 6:
+void trie_user();//Studen 6:
 
 #endif
