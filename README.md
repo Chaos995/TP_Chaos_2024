@@ -35,14 +35,14 @@ filling_struct(); //takes the book's info and stores it in an array of structs. 
 
 file_creation(); //create a .txt file based on the info from the previous array of struct. (admin)
 
-mofify(); //allow only admins to modify certain info in the .txt file, where books info is. (admin)
+modify(); //allow only admins to modify certain info in the .txt file, where books info is. (admin)
 
 delete_book(); //also only allows the admins to delete a certain book from the .txt file. (admin)
 
 rechercher(); //allows all users to search for a certain book. (both)
 
-Trie(); //sort the books based on category or alphabetical order (alphabetical order is a work in progress), 
-it branch into two functions, by_order, and by_categorie. (both)
+Trie(); //sort the books based on category or price, 
+it branches into two functions, by_order, and by_categorie. (both)
 
---wrote by Marouane
+--written by Marouane
 
